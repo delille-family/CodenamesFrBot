@@ -12,13 +12,14 @@ wanna_play = 'Tu veux jouer à Codenames? pour commencer une partie envoie moi u
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-  markup = types.ReplyKeyboardMarkup(row_width=1)
-  markup.add(*[ types.KeyboardButton(str(x + 1)) for x in range(4) ])
+  markup = types.ReplyKeyboardMarkup()
+  for i in range(4):
+    markup.add(str(i + 1))
   bot.reply_to(message, wanna_play, reply_markup=markup)
 
 @bot.message_handler(regexp='^[1-4]$')
 def echo_words(message):
-  difficulty = int(message.text.encode('utf-8'))
+  difficulty = int(message.text)
   words = pick_random_words(difficulty)
   words_by_player = [', '.join(x) for x in split_words_by_player(words)]
   message_1 = ', '.join(words)

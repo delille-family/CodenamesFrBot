@@ -1,20 +1,13 @@
-import io
-import random
-import requests
+from build_dict import download_dict
 import pandas as pd
+import random
+import os.path
 
-# Get dictionnary from lexique.org
-url = 'http://www.lexique.org/databases/Lexique382/Lexique382.tsv'
-s=requests.get(url).content
-dictionnary=pd.read_csv(io.StringIO(s.decode('utf-8')), sep='\t')
-
-# Or locally
-# dictionnary = pd.read_csv('dict.tsv')
-
-# Keep only names (not verbs, adverbs, etc)
-# sorted by frequence (Descending)
-dictionnary_sorted_by_freq = dictionnary[dictionnary['cgram'] == 'NOM'].sort_values('freqlivres', ascending=False)
-lemmes = dictionnary_sorted_by_freq['lemme'].unique()
+file = 'dict.csv'
+if not os.path.isfile(file):
+  download_dict()
+df = pd.read_csv(file)
+lemmes = df.words
 
 def nb_words(difficulty):
   nb_words = [100, 500, 1000, 5000]
